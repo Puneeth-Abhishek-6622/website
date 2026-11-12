@@ -1,0 +1,203 @@
+{
+  "source": "sample.flac",
+  "transcript": "sample.txt",
+  "sample_rate_hz": 16000,
+  "duration_seconds": 5.025,
+  "seed": 1234,
+  "seed_policy": "New individual outputs use seed + their list index; new recipes use seed + 100 + their list index. Existing valid outputs are preserved.",
+  "individual": [
+    {
+      "id": "awgn",
+      "file": "awgn_15db.wav",
+      "function": "AnalogChannelSimulator.add_awgn",
+      "parameters": {
+        "snr_db": 15
+      }
+    },
+    {
+      "id": "jakes",
+      "file": "jakes_40kmh.wav",
+      "function": "AnalogChannelSimulator.apply_jakes_fading",
+      "parameters": {
+        "f_c": 150000000,
+        "velocity_kmh": 40,
+        "num_paths": 20
+      }
+    },
+    {
+      "id": "watterson_moderate",
+      "file": "watterson_moderate.wav",
+      "function": "AnalogChannelSimulator.apply_watterson_hf",
+      "parameters": {
+        "condition": "moderate"
+      }
+    },
+    {
+      "id": "band_limiting",
+      "file": "band_limit_3400hz.wav",
+      "function": "DigitalHandheldSimulator.apply_band_limiting",
+      "parameters": {
+        "cutoff_freq": 3400,
+        "order": 10
+      }
+    },
+    {
+      "id": "gsm_codec",
+      "file": "gsm_codec.wav",
+      "function": "DigitalHandheldSimulator.apply_gsm_codec",
+      "parameters": {
+        "codec": "GSM 06.10",
+        "bitrate_kbps": 13
+      }
+    },
+    {
+      "id": "packet_loss",
+      "file": "packet_loss_5pct.wav",
+      "function": "NetworkChannel.apply_burst_loss",
+      "parameters": {
+        "p_loss": 0.05,
+        "p_recovery": 0.5,
+        "frame_duration_ms": 20
+      }
+    }
+  ],
+  "recipes": [
+    {
+      "id": "vhf_mobile_police",
+      "title": "VHF Mobile (Police)",
+      "scenario": "A patrol-car radio moving through an urban area, where reflections cause fading before receiver noise is added.",
+      "file": "recipe_vhf_mobile_police.wav",
+      "stages": [
+        {
+          "id": "jakes",
+          "label": "Jakes fading",
+          "function": "AnalogChannelSimulator.apply_jakes_fading",
+          "parameters": {
+            "f_c": 150000000,
+            "velocity_kmh": 60,
+            "num_paths": 20
+          }
+        },
+        {
+          "id": "awgn",
+          "label": "AWGN",
+          "function": "AnalogChannelSimulator.add_awgn",
+          "parameters": {
+            "snr_db": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "hf_aviation",
+      "title": "HF Aviation",
+      "scenario": "Long-distance aircraft-to-ground voice crossing an ionospheric HF path with moderate multipath and receiver noise.",
+      "file": "recipe_hf_aviation.wav",
+      "stages": [
+        {
+          "id": "watterson_moderate",
+          "label": "Watterson (Moderate)",
+          "function": "AnalogChannelSimulator.apply_watterson_hf",
+          "parameters": {
+            "condition": "moderate"
+          }
+        },
+        {
+          "id": "awgn",
+          "label": "AWGN",
+          "function": "AnalogChannelSimulator.add_awgn",
+          "parameters": {
+            "snr_db": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "digital_tactical_radio",
+      "title": "Digital Tactical Radio",
+      "scenario": "A narrowband handheld radio limits speech bandwidth, applies a low-bitrate GSM vocoder, then adds channel noise.",
+      "file": "recipe_digital_tactical_radio.wav",
+      "stages": [
+        {
+          "id": "band_limiting",
+          "label": "Band limiting",
+          "function": "DigitalHandheldSimulator.apply_band_limiting",
+          "parameters": {
+            "cutoff_freq": 3400,
+            "order": 10
+          }
+        },
+        {
+          "id": "gsm_codec",
+          "label": "GSM codec",
+          "function": "DigitalHandheldSimulator.apply_gsm_codec",
+          "parameters": {
+            "codec": "GSM 06.10",
+            "bitrate_kbps": 13
+          }
+        },
+        {
+          "id": "awgn",
+          "label": "AWGN",
+          "function": "AnalogChannelSimulator.add_awgn",
+          "parameters": {
+            "snr_db": 10
+          }
+        }
+      ]
+    },
+    {
+      "id": "voip_office",
+      "title": "VoIP (Office)",
+      "scenario": "A voice call over a congested office Wi-Fi connection, with burst losses concealed by repeating and fading the previous packet.",
+      "file": "recipe_voip_office.wav",
+      "stages": [
+        {
+          "id": "packet_loss",
+          "label": "Burst packet loss",
+          "function": "NetworkChannel.apply_burst_loss",
+          "parameters": {
+            "p_loss": 0.05,
+            "p_recovery": 0.5,
+            "frame_duration_ms": 20
+          }
+        }
+      ]
+    },
+    {
+      "id": "extreme_arctic_operations",
+      "title": "Extreme Arctic Operations",
+      "scenario": "A high-latitude emergency HF link under disturbed ionospheric conditions, followed by vocoding and burst packet loss.",
+      "file": "recipe_extreme_arctic_operations.wav",
+      "stages": [
+        {
+          "id": "watterson_disturbed",
+          "label": "Watterson (Disturbed)",
+          "function": "AnalogChannelSimulator.apply_watterson_hf",
+          "parameters": {
+            "condition": "disturbed"
+          }
+        },
+        {
+          "id": "gsm_codec",
+          "label": "GSM codec",
+          "function": "DigitalHandheldSimulator.apply_gsm_codec",
+          "parameters": {
+            "codec": "GSM 06.10",
+            "bitrate_kbps": 13
+          }
+        },
+        {
+          "id": "packet_loss",
+          "label": "Burst packet loss",
+          "function": "NetworkChannel.apply_burst_loss",
+          "parameters": {
+            "p_loss": 0.12,
+            "p_recovery": 0.3,
+            "frame_duration_ms": 20
+          }
+        }
+      ]
+    }
+  ]
+}

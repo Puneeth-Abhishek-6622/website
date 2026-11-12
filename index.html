@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f4ef">
+    <meta name="description" content="Hear how radio, digital, and network channel impairments affect speech communication.">
+    <title>Radio Channel Simulation</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#">Radio Channel Simulation</a>
+      <nav aria-label="Main navigation">
+        <a href="#models">Channel models</a>
+        <a href="#recipes">Recipes</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro">
+        <h1>Radio Channel Simulation</h1>
+        <p>This website demonstrates how different channel impairments affect speech communication.</p>
+        <p class="transcript"><strong>Sample transcript:</strong> “Congratulations were poured in upon the princess everywhere during her journey.”</p>
+      </section>
+
+      <section id="models" class="content-section">
+        <h2>Individual Channel Models</h2>
+        <div id="model-categories"></div>
+      </section>
+
+      <section id="recipes" class="content-section">
+        <h2>Channel Degradation Recipes</h2>
+        <div id="recipe-grid" class="card-grid"></div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Audio source: <a href="sample.flac">sample.flac</a></span>
+      <a href="sample.txt">View transcript</a>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>
